@@ -42,12 +42,6 @@ function requestImages(valueInput, page) {
       } = res;
       createMarkup(hits);
       totalPage = Math.ceil(totalHits / per_page);
-      if (!totalHits) {
-        Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-        return;
-      }
       if (page === totalPage) {
         btnLoadMore.style.display = 'none';
         Notify.info(
@@ -55,6 +49,13 @@ function requestImages(valueInput, page) {
         );
       } else {
         btnLoadMore.style.display = 'block';
+      }
+      if (!totalHits) {
+        btnLoadMore.style.display = 'none';
+        Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+        return;
       }
     })
     .catch(err =>
