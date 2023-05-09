@@ -40,14 +40,18 @@ async function requestImages(valueInput, page) {
     const {
       data: { totalHits, hits },
     } = res;
+
     createMarkup(hits);
+
     totalPage = Math.ceil(totalHits / per_page);
+
     if (page === totalPage) {
       btnLoadMore.style.display = 'none';
       Notify.info("We're sorry, but you've reached the end of search results.");
     } else {
       btnLoadMore.style.display = 'block';
     }
+
     if (!totalHits) {
       btnLoadMore.style.display = 'none';
       Notify.failure(
