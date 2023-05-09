@@ -34,35 +34,32 @@ function onClickLoadMore() {
   requestImages(valueInput, page);
 }
 
-function requestImages(valueInput, page) {
-  fetchImages(valueInput, page)
-    .then(res => {
-      const {
-        data: { totalHits, hits },
-      } = res;
-      createMarkup(hits);
-      totalPage = Math.ceil(totalHits / per_page);
-      if (page === totalPage) {
-        btnLoadMore.style.display = 'none';
-        Notify.info(
-          "We're sorry, but you've reached the end of search results."
-        );
-      } else {
-        btnLoadMore.style.display = 'block';
-      }
-      if (!totalHits) {
-        btnLoadMore.style.display = 'none';
-        Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-        return;
-      }
-    })
-    .catch(err =>
+async function requestImages(valueInput, page) {
+  try {
+    const res = await fetchImages(valueInput, page);
+    const {
+      data: { totalHits, hits },
+    } = res;
+    createMarkup(hits);
+    totalPage = Math.ceil(totalHits / per_page);
+    if (page === totalPage) {
+      btnLoadMore.style.display = 'none';
+      Notify.info("We're sorry, but you've reached the end of search results.");
+    } else {
+      btnLoadMore.style.display = 'block';
+    }
+    if (!totalHits) {
+      btnLoadMore.style.display = 'none';
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
-      )
+      );
+      return;
+    }
+  } catch (error) {
+    Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
     );
+  }
 }
 
 function createMarkup(data) {
