@@ -30,8 +30,8 @@ function onFormSubmit(e) {
 function onClickLoadMore() {
   page += 1;
   galleryEl.innerHTML = '';
-  value = valueInput;
-  requestImages(value, page);
+
+  requestImages(valueInput, page);
 }
 
 function requestImages(valueInput, page) {
