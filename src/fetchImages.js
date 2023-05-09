@@ -13,10 +13,6 @@ export async function fetchImages(query, page) {
   });
 
   const url = `${BASE_URL}?${params}`;
-  try {
-    const response = await axios(url);
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
+  const data = await axios(url);
+  return data;
 }

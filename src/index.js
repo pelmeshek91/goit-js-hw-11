@@ -1,7 +1,7 @@
-// Описаний в документації
-import SimpleLightbox from 'simplelightbox';
-// Додатковий імпорт стилів
-import 'simplelightbox/dist/simple-lightbox.min.css';
+// // Описаний в документації
+// import SimpleLightbox from 'simplelightbox';
+// // Додатковий імпорт стилів
+// import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import { fetchImages } from './fetchImages';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
@@ -24,12 +24,14 @@ function onFormSubmit(e) {
   valueInput = e.target.elements.searchQuery.value;
 
   if (!valueInput) return;
+
+  btnLoadMore.style.display = 'none';
+
   requestImages(valueInput, page);
 }
 
 function onClickLoadMore() {
   page += 1;
-  galleryEl.innerHTML = '';
 
   requestImages(valueInput, page);
 }
@@ -45,19 +47,18 @@ async function requestImages(valueInput, page) {
 
     totalPage = Math.ceil(totalHits / per_page);
 
-    if (page === totalPage) {
-      btnLoadMore.style.display = 'none';
-      Notify.info("We're sorry, but you've reached the end of search results.");
-    } else {
-      btnLoadMore.style.display = 'block';
-    }
-
     if (!totalHits) {
       btnLoadMore.style.display = 'none';
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
       return;
+    }
+    if (page !== totalPage) {
+      btnLoadMore.style.display = 'block';
+    } else {
+      btnLoadMore.style.display = 'none';
+      Notify.info("We're sorry, but you've reached the end of search results.");
     }
   } catch (error) {
     Notify.failure(
@@ -98,7 +99,7 @@ function createMarkup(data) {
     </div> `,
     ''
   );
-  galleryEl.insertAdjacentHTML('afterbegin', markup);
+  galleryEl.insertAdjacentHTML('beforeend', markup);
 }
 
 form.addEventListener('submit', onFormSubmit);
