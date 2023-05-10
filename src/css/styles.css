@@ -106,3 +106,9 @@ input {
   color: white;
   background-color: rgb(127, 53, 202);
 }
+
+.block {
+  width: 10px;
+  height: 10px;
+
+}

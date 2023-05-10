@@ -1,14 +1,8 @@
-// // Описаний в документації
-// import SimpleLightbox from 'simplelightbox';
-// // Додатковий імпорт стилів
-// import 'simplelightbox/dist/simple-lightbox.min.css';
-
 import { fetchImages } from './fetchImages';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const form = document.querySelector('#search-form');
 const galleryEl = document.querySelector('.gallery');
-const btnLoadMore = document.querySelector('.load-more');
 
 let page = null;
 let per_page = 40;
@@ -24,8 +18,6 @@ function onFormSubmit(e) {
   valueInput = e.target.elements.searchQuery.value;
 
   if (!valueInput) return;
-
-  btnLoadMore.style.display = 'none';
 
   requestImages(valueInput, page);
 }
@@ -48,17 +40,34 @@ async function requestImages(valueInput, page) {
     totalPage = Math.ceil(totalHits / per_page);
 
     if (!totalHits) {
-      btnLoadMore.style.display = 'none';
-      Notify.failure(
+      return Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
-      return;
     }
+
     if (page !== totalPage) {
-      btnLoadMore.style.display = 'block';
-    } else {
-      btnLoadMore.style.display = 'none';
-      Notify.info("We're sorry, but you've reached the end of search results.");
+      const infiniteObserver = new IntersectionObserver(
+        ([entry], observer) => {
+          if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            onClickLoadMore();
+          }
+        },
+        {
+          threshold: 0.5,
+        }
+      );
+
+      const lastCard = document.querySelector('.photo-card:last-child');
+      if (lastCard) {
+        return infiniteObserver.observe(lastCard);
+      }
+    }
+
+    if (page === totalPage) {
+      return Notify.info(
+        "We're sorry, but you've reached the end of search results."
+      );
     }
   } catch (error) {
     Notify.failure(
@@ -73,16 +82,14 @@ function createMarkup(data) {
       acc,
       { webformatURL, largeImageURL, tags, likes, views, comments, downloads }
     ) =>
-      // <a class="gallery__item" href="${largeImageURL}">
       acc +
       ` <div class="photo-card">
-          <img
-      class="gallery__image"
-      src="${webformatURL}"
-        data-source="${largeImageURL}"                      
-      alt="${tags}" loading="lazy" width="300"/>
-      </a>
-      <div class="info">
+         <img
+    class="gallery__image"
+    src="${webformatURL}"
+    data-source="${largeImageURL}"                      
+    alt="${tags}" loading="lazy" width="300"/>
+          <div class="info">
         <p class="info-item">
           <b>Likes: </b>${likes}
         </p>
@@ -103,9 +110,4 @@ function createMarkup(data) {
 }
 
 form.addEventListener('submit', onFormSubmit);
-btnLoadMore.addEventListener('click', onClickLoadMore);
-
-// const lightbox = new SimpleLightbox('.gallery .gallery__item', {
-//   captionDelay: 250,
-//   captionsData: 'alt',
-// });
+// btnLoadMore.addEventListener('click', onClickLoadMore);
