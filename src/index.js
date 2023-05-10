@@ -70,7 +70,7 @@ async function requestImages(valueInput, page) {
       );
     }
   } catch (error) {
-    Notify.failure(
+    return Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
   }
@@ -110,4 +110,3 @@ function createMarkup(data) {
 }
 
 form.addEventListener('submit', onFormSubmit);
-// btnLoadMore.addEventListener('click', onClickLoadMore);

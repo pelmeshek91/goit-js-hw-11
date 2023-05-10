@@ -84,7 +84,7 @@ input {
   font-size: 18px;
 }
 
-.btn-wrap {
+/* .btn-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,9 +92,9 @@ input {
   margin-right: auto;
   margin-bottom: 10px;
   margin-top: 10px;
-}
+} */
 
-
+/* 
 .load-more {
   display: none;
   font-size: 18px;
@@ -105,10 +105,4 @@ input {
   border: 1px solid rgb(127, 53, 202);
   color: white;
   background-color: rgb(127, 53, 202);
-}
-
-.block {
-  width: 10px;
-  height: 10px;
-
-}
+} */
